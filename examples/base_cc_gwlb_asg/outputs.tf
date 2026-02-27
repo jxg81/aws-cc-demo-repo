@@ -85,15 +85,7 @@ output "testbedconfig" {
   value       = local.testbedconfig
 }
 
-resource "local_file" "testbed" {
-  content  = local.testbedconfig
-  filename = "../testbed.txt"
-}
 
-resource "local_file" "ssh_config" {
-  content  = local.ssh_config_contents
-  filename = "../ssh_config"
-}
 locals {
   workload_map = {
     for index, ip in module.workload.private_ip :
@@ -114,4 +106,9 @@ Host workload-${k}
       ProxyCommand ssh bastion -W %h:%p
     %{endfor~}
   SSH_CONFIG
+}
+
+output "ssh_config" {
+  description = "SSH Conf"
+  value       = local.ssh_config_contents
 }

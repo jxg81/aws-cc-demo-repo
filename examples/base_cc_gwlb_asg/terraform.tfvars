@@ -12,16 +12,16 @@
 
 ## 1. Zscaler Cloud Connector Provisioning URL E.g. connector.zscaler.net/api/v1/provUrl?name=aws_prov_url
 
-#cc_vm_prov_url                             = "connector.zscaler.net/api/v1/provUrl?name=aws_prov_url"
+cc_vm_prov_url                             = "connector.zscalerthree.net/api/v1/provUrl?name=aws-asg-demo"
 
 ## 2. AWS Secrets Manager Secret Name from Secrets Manager E.g ZS/CC/credentials
 
-#secret_name                                =  "ZS/CC/credentials/aws_cc_secret_name"
+secret_name                                =  "mysecret"
 
 ## 3. Cloud Connector cloud init provisioning listener port. This is required for GWLB and Health Probe deployments. 
 ## Uncomment and set custom probe port to a single value of 80 or any number between 1024-65535. Default is 50000.
 
-#http_probe_port                            = 50000
+http_probe_port                            = 50000
 
 
 #####################################################################################################################
@@ -30,12 +30,12 @@
 
 ## 4. The name string for all Cloud Connector resources created by Terraform for Tag/Name attributes. (Default: zscc)
 
-#name_prefix                                = "zscc"
+name_prefix                                = "zscc"
 
 ## 5. AWS region where Cloud Connector resources will be deployed. This environment variable is automatically populated if running ZSEC script
 ##    and thus will override any value set here. Only uncomment and set this value if you are deploying terraform standalone. (Default: us-west-2)
 
-#aws_region                                 = "us-west-2"
+aws_region                                 = "ap-southeast-2"
 
 ## 6. Cloud Connector AWS EC2 Instance size selection. Uncomment ccvm_instance_type line with desired vm size to change.
 ##    (Default: m6i.large)
@@ -43,14 +43,14 @@
 #ccvm_instance_type                         = "t3.medium"
 #ccvm_instance_type                         = "m5n.large"
 #ccvm_instance_type                         = "c5a.large"
-#ccvm_instance_type                         = "m6i.large"
+ccvm_instance_type                         = "m6i.large"
 #ccvm_instance_type                         = "c6i.large"
 #ccvm_instance_type                         = "c6in.large"
 
 ## 7. The number of Cloud Connector Subnets to create in sequential availability zones. Available input range 1-3 (Default: 2)
 ##    **** NOTE - This value will be ignored if byo_vpc / byo_subnets
 
-#az_count                                   = 2
+az_count                                   = 2
 
 ## 8. The number of Auto Scaling Groups to create. By default, Terraform will create a single Auto Scaling Group containing multiple subnets/availability zones. 
 ##    Uncomment and set to true if you would rather create one Auto Scaling Group per subnet/availability zone (var.az_count).
@@ -61,23 +61,23 @@
 ##    Recommendation is to maintain HA/Zonal resliency so for example if az_count = 2 and cross_zone_lb_enabled is false the minimum number of CCs you would want for a
 ##    production deployment would be 4
 
-#min_size                                   = 2
+min_size                                   = 2
 
 ## 10. The maximum number of Cloud Connectors to maintain in an Autoscaling group. (Default: 4)
 ##    Value must be a number between 1 and 10
 
-#max_size                                   = 4
+max_size                                   = 4
 
 ## 11. The health check grace period specifies the minimum amount of time (in seconds) to keep a new instance in service before terminating it if it's found to be unhealthy. 
 ##     Otheriwse Default is 15 minutes. (Default: 900 seconds/15 minutes)
 
-#health_check_grace_period                  = 900
+health_check_grace_period                  = 900
 
 ## 12. Amount of time, in seconds, until a newly launched instance can contribute to the Amazon CloudWatch metrics. 
 ##     This delay lets an instance finish initializing before Amazon EC2 Auto Scaling aggregates instance metrics, resulting in more reliable usage data.
 ##     Default: 0 seconds
 
-#instance_warmup                            = 0
+instance_warmup                            = 0
 
 ## 13. Whether newly launched instances are automatically protected from termination by Amazon EC2 Auto Scaling when scaling in. 
 ##     Uncomment to disable. (Default: true)
@@ -88,16 +88,16 @@
 ##    /24 subnets are created assuming this cidr is a /16. You may need to edit cidr_block values for subnet creations if
 ##    desired for smaller or larger subnets. (Default: "10.1.0.0/16")
 
-#vpc_cidr                                   = "10.1.0.0/16"
+vpc_cidr                                   = "10.1.0.0/16"
 
 ## 15. Number of Workload VMs to be provisioned in the workload subnet. Only limitation is available IP space
 ##    in subnet configuration. Only applicable for "base" deployment types. Default workload subnet is /24 so 250 max
 
-#workload_count                             = 2
+workload_count                             = 2
 
 ## 16. Tag attribute "Owner" assigned to all resoure creation. (Default: "zscc-admin")
 
-#owner_tag                                  = "username@company.com"
+owner_tag                                  = "jgreensmith@zscaler.com"
 
 ## 17. By default, terraform will always query the AWS Marketplace for the latest Cloud Connector AMI available.
 ##     This variable is provided if a customer desires to override/retain an old ami for existing deployments rather than upgrading and forcing a launch template change."
@@ -112,7 +112,7 @@
 ## 18. By default, GWLB deployments are configured as zonal. Uncomment if you want to enable cross-zone load balancing
 ##     functionality. Only applicable for gwlb deployment types. (Default: false)
 
-#cross_zone_lb_enabled                      = true
+cross_zone_lb_enabled                      = true
 
 ## 19. Gateway loadbalancing hashing algorithm. Default is 5-tuple (None).
 ##     Additional options include: 2-tuple (source_ip_dest_ip) and 3-tuple (source_ip_dest_ip_proto)
@@ -162,7 +162,7 @@
 ## 27. Target value number for autoscaling policy CPU utilization target tracking. ie: trigger a scale in/out to keep average CPU Utliization percentage across all instances at/under this number
 ##     (Default: 80%)
 
-#target_cpu_util_value                      = 80
+target_cpu_util_value                      = 80
 
 ## 28. Determine whether or not to create autoscaling group notifications. Default is false. If setting this value to true, terraform will also create a new sns topic and topic subscription in the same AWS account"
 
@@ -185,7 +185,7 @@
 ##     want to disable this.
 ##     Note: Cloud Connector will only be accessible via AWS Session Manager SSM
 
-#mgmt_ssh_enabled                           = false
+mgmt_ssh_enabled                           = false
 
 ## 33. By default, a security group is created and assigned to the CC service interface(s).
 ##     There is an optional rule that permits Cloud Connector to forward direct traffic out
